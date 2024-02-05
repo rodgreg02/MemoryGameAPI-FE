@@ -7,20 +7,23 @@ import org.springframework.stereotype.Service
 
 @Service
 class GameService(val gameRepo: GameRepo) {
-    fun startGame(){
-gameRepo.startGame()
+    fun startGame() : Boolean{
+        gameRepo.startGame()
+        return true
     }
 
     fun getCard(indexOfCard : Int, valueOfCurrCard: Int) : Boolean{
-        var checkCard = gameRepo.getCard(indexOfCard)
+        val checkCard = gameRepo.getCard(indexOfCard)
         if (checkCard != null) {
-            if(checkCard.getCardValue() == valueOfCurrCard){
-                return true
+            return if(checkCard.getCardValue() == valueOfCurrCard){
+
+                true
             }else{
-                return false
+                gameRepo.getCard(valueOfCurrCard)!!.setCardFlipped()
+                false
             }
         }
-   return false }
+        return false }
 
     fun getCard(indexOfCard : Int) : CardEntity? {
         if(!(gameRepo.getCard(indexOfCard)?.flipped)!!) {
@@ -32,7 +35,4 @@ gameRepo.startGame()
         }
     }
 
-    fun getCards() : List<CardEntity>{
-        return gameRepo.getCards()
-    }
 }

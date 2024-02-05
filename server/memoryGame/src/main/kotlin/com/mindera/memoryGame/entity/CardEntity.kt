@@ -17,12 +17,12 @@ class CardEntity private constructor(builder : CardEntity.Builder){
         return value
     }
     fun setCardFlipped(){
-        this.flipped = true
+        this.flipped = !(this.flipped)
     }
     class Builder {
 
         var value : Int? = null
-        private set
+            private set
         fun value(value : Int) = apply {this.value = value}
         fun build() : CardEntity {return CardEntity(this)}
     }
