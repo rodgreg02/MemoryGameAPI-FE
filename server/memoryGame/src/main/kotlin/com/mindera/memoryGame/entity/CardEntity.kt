@@ -1,8 +1,7 @@
 package com.mindera.memoryGame.entity
 
-import jakarta.persistence.Entity
 
-@Entity
+
 class CardEntity private constructor(builder : CardEntity.Builder){
 
 
