@@ -2,7 +2,6 @@ package com.mindera.memoryGame.controller
 
 import com.mindera.memoryGame.entity.CardEntity
 import com.mindera.memoryGame.service.GameService
-import org.apache.catalina.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -22,6 +21,11 @@ class GameController(val gameService : GameService) {
     @GetMapping("/{indexOfCard}")
     fun getCard(@PathVariable indexOfCard: Int) : CardEntity? {
         return gameService.getCard(indexOfCard)
+    }
+
+    @GetMapping
+    fun getAllCards() : List<CardEntity>? {
+                       return null
     }
 
 }
