@@ -17,9 +17,8 @@ class GameRepo {
             println(gameField[i].getCardValue())
         }
     }
-    fun getCard(indexOfCard: Int): CardEntity? {
-        return gameField.getOrNull(indexOfCard)
-    }
+    fun getCard(indexOfCard: Int) = gameField.getOrNull(indexOfCard)
 
+    fun getAllCards() = gameField
 
 }
