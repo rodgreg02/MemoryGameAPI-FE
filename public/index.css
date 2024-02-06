@@ -59,3 +59,9 @@ body {
 [id^="card"].clicked {
   transform: scale(1.05);
 }
+
+[id^="card"].block {
+  pointer-events: none;
+  background-color: lightgray;
+  opacity: 80%;
+}
