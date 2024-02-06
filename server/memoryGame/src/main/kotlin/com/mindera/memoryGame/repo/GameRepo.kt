@@ -8,11 +8,14 @@ class GameRepo {
     private val gameField: MutableList<CardEntity> = mutableListOf()
 
     fun startGame(){
-        for(i in 0..20){
+        for(i in 0..19){
             val cardEntity = CardEntity.Builder().value(if (i >= 10) i - 10 else i).build()
             gameField.add(cardEntity)
         }
         gameField.shuffle()
+        for(i in 0..19){
+            println(gameField[i].getCardValue())
+        }
     }
     fun getCard(indexOfCard: Int): CardEntity? {
         return gameField.getOrNull(indexOfCard)

@@ -8,11 +8,8 @@ let guessed;
 
 for (let i = 0; i < cards.length; i++) {
   const card = cards[i];
+  card.innerHTML = i
   card.addEventListener("click", (event) => {
-    const iconElement = event.currentTarget.querySelector("i");
-
-    iconElement.classList.remove("fa-question");
-    iconElement.classList.add("fa-check");
     console.log("Clicked on card ", i);
 
     if(!firstCard){
@@ -55,15 +52,15 @@ function startGame() {
 
 
     
-function getCardFirst(i){
+function getCardFirst(l){
 
   const apiUrl = "http://localhost:8080/game/";
-  const data = {"indexOfCard":i};
+  const data = {"indexOfCard":l};
   
 
   const axiosOptions = {
     method: "GET",
-    url: apiUrl + i,
+    url: apiUrl + l,
     headers: {
       "Content-Type": "application/json",
     },
@@ -80,14 +77,14 @@ function getCardFirst(i){
 }
 
 
-function getCardSecond(i,j){
+function getCardSecond(k,j){
   const apiUrl = "http://localhost:8080/game/";
-  const data = {"indexOfCard":j,"valueOfCurrCard":i};
+  const data = {"indexOfCard":j,"valueOfCurrCard":k};
   
 
   const axiosOptions = {
     method: "GET",
-    url: apiUrl + j + "/" + i,
+    url: apiUrl + j + "/" + k,
     headers: {
       "Content-Type": "application/json",
     },
@@ -96,8 +93,8 @@ function getCardSecond(i,j){
   axios(axiosOptions)
   .then((response) => {
     console.log("Response:", response.data);
-    if(response.data == true){guess = true}
-    else{guess = false}
+    if(response.data == true){guessed = true}
+    else{guessed = false}
   })
   .catch((error) => {
     console.error("Error:", error);

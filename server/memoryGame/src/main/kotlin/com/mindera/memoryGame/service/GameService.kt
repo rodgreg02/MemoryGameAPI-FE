@@ -14,13 +14,16 @@ class GameService(val gameRepo: GameRepo) {
 
     fun getCard(indexOfCard : Int, valueOfCurrCard: Int) : Boolean{
         val checkCard = gameRepo.getCard(indexOfCard)
+        val currCard = gameRepo.getCard(valueOfCurrCard)
         if (checkCard != null) {
-            return if(checkCard.getCardValue() == valueOfCurrCard){
-
-                true
-            }else{
-                gameRepo.getCard(valueOfCurrCard)!!.setCardFlipped()
-                false
+            if (currCard != null) {
+                return if(checkCard.getCardValue() == currCard.getCardValue()){
+                    gameRepo.getCard(indexOfCard)!!.setCardFlipped()
+                    true
+                }else{
+                    gameRepo.getCard(valueOfCurrCard)!!.setCardFlipped()
+                    false
+                }
             }
         }
         return false }
@@ -28,6 +31,7 @@ class GameService(val gameRepo: GameRepo) {
     fun getCard(indexOfCard : Int) : CardEntity? {
         if(!(gameRepo.getCard(indexOfCard)?.flipped)!!) {
             gameRepo.getCard(indexOfCard)!!.setCardFlipped()
+
             return gameRepo.getCard(indexOfCard)
         }
         else{
