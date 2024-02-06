@@ -1,4 +1,3 @@
-
 const cards = document.querySelectorAll(".card");
 
 let currentCard;
@@ -8,17 +7,17 @@ let guessed;
 
 for (let i = 0; i < cards.length; i++) {
   const card = cards[i];
-  card.innerHTML = i
+  card.innerHTML = i;
   card.addEventListener("click", (event) => {
-    console.log("Clicked on card ", i);
-
-    if(!firstCard){
+    if (!firstCard) {
       currentCard = i;
-    getCardFirst(i);
-    firstCard = true;
-    }else{
-      checkCard = i
-      getCardSecond(currentCard,checkCard)
+      getCardFirst(i);
+      firstCard = true;
+    } else {
+      checkCard = i;
+      if (getCardSecond(currentCard, checkCard, card)) {
+      }
+
       firstCard = false;
     }
     card.classList.add("clicked");
@@ -44,59 +43,86 @@ function startGame() {
   axios(axiosOptions)
     .then((response) => {
       console.log("Response:", response.data);
+      removeBlockClass();
     })
     .catch((error) => {
-      console.error("Error:", error);
+      if (error.response && error.response.status === 403) {
+        console.log("Já descobriste essa carta");
+      } else {
+        console.error("Erro na requisição:", error.message);
+      }
     });
 }
 
-
-    
-function getCardFirst(l){
-
-  const apiUrl = "http://localhost:8080/game/";
-  const data = {"indexOfCard":l};
-  
-
-  const axiosOptions = {
-    method: "GET",
-    url: apiUrl + l,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: JSON.stringify(data),
-  };
-  axios(axiosOptions)
-  .then((response) => {
-    console.log("Response:", response.data);
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
-
+function removeBlockClass() {
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    setTimeout(() => card.classList.remove("block"), 0);
+  }
 }
 
-
-function getCardSecond(k,j){
+function getCardFirst(firstCardReveal) {
   const apiUrl = "http://localhost:8080/game/";
-  const data = {"indexOfCard":j,"valueOfCurrCard":k};
-  
+  const data = { indexOfCard: firstCardReveal };
 
   const axiosOptions = {
     method: "GET",
-    url: apiUrl + j + "/" + k,
+    url: apiUrl + firstCardReveal,
     headers: {
       "Content-Type": "application/json",
     },
     data: JSON.stringify(data),
   };
   axios(axiosOptions)
-  .then((response) => {
-    console.log("Response:", response.data);
-    if(response.data == true){guessed = true}
-    else{guessed = false}
-  })
-  .catch((error) => {
-    console.error("Error:", error);
-  });
+    .then((response) => {
+      console.log("Response:", response.data);
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 403) {
+        console.log("Já descobriste essa carta");
+      } else {
+        console.error("Erro na requisição:", error.message);
+      }
+    });
+}
+
+function getCardSecond(secondCardRevealed, firstCardRevealed, card) {
+  const apiUrl = "http://localhost:8080/game/";
+  const data = {
+    indexOfCard: firstCardRevealed,
+    valueOfCurrCard: secondCardRevealed,
+  };
+
+  const axiosOptions = {
+    method: "GET",
+    url: apiUrl + firstCardRevealed + "/" + secondCardRevealed,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data),
+  };
+  axios(axiosOptions)
+    .then((response) => {
+      console.log("Response:", response.data);
+      if (response.data == true) {
+        guessed = true;
+        console.log("nice");
+        blockCard(cards[secondCardRevealed]);
+        blockCard(cards[firstCardRevealed]);
+      } else {
+        guessed = false;
+        console.log("nop, lol..");
+      }
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 403) {
+        console.log("Já descobriste essa carta");
+      } else {
+        console.error("Erro na requisição:", error.message);
+      }
+    });
+}
+
+function blockCard(card) {
+  card.classList.add("block");
 }
