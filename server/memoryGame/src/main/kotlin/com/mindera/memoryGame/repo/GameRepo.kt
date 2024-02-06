@@ -21,4 +21,9 @@ class GameRepo {
 
     fun getAllCards() = gameField
 
+    fun restartGame(){
+        gameField.forEach{
+            it.setCardFlippedFalse();
+        }
+    }
 }

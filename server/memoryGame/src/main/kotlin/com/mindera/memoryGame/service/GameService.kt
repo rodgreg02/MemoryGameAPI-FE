@@ -45,4 +45,6 @@ class GameService(val gameRepo: GameRepo) {
 
     fun getAllCards() = gameRepo.getAllCards();
 
+    fun restartGame() = gameRepo.restartGame();
+
 }

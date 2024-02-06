@@ -43,6 +43,28 @@ function startGame() {
 
   axios(axiosOptions)
     .then((response) => {
+      getAll()
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function getAll(){
+  const apiUrl = "http://localhost:8080/game";
+  const data = {};
+
+  const axiosOptions = {
+    method: "GET",
+    url: apiUrl,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data: JSON.stringify(data),
+  };
+
+  axios(axiosOptions)
+    .then((response) => {
       console.log("Response:", response.data);
     })
     .catch((error) => {

@@ -17,6 +17,9 @@ class CardEntity private constructor(builder : CardEntity.Builder){
     fun setCardFlipped(){
         this.flipped = !(this.flipped)
     }
+
+    fun setCardFlippedFalse(){ this.flipped = false}
+
     class Builder {
 
         var value : Int? = null
