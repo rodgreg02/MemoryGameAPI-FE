@@ -13,7 +13,7 @@ class GameController(val gameService : GameService) {
     fun startGame() : ResponseEntity<Boolean>{ return ResponseEntity.ok().body(gameService.startGame())}
 
     @PostMapping("/restart")
-    fun restartGame() : ResponseEntity<Boolean>{ return ResponseEntity.ok().body(gameService.restartGame())}
+    fun restartGame() : ResponseEntity<Unit> { return ResponseEntity.ok().body(gameService.restartGame())}
 
     @GetMapping("/{indexOfCard}/{valueOfCurrCard}")
     fun checkCard(@PathVariable indexOfCard: Int,
