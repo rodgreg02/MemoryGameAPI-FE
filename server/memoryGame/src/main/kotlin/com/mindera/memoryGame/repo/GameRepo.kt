@@ -13,6 +13,7 @@ class GameRepo {
             gameField.add(cardEntity)
         }
         gameField.shuffle()
+        println("start:")
         for(i in 0..19){
             println(gameField[i].getCardValue())
         }
@@ -24,6 +25,11 @@ class GameRepo {
     fun restartGame(){
         gameField.forEach{
             it.setCardFlippedFalse();
+        }
+        gameField.shuffle()
+        println("restart:")
+        for(i in 0..19){
+            println(gameField[i].getCardValue())
         }
     }
 }

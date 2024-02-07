@@ -53,15 +53,25 @@ body {
 
 [id^="card"]:hover {
   cursor: pointer;
-  background-color: rgba(217, 192, 192, 0.481);
 }
 
 [id^="card"].clicked {
   transform: scale(1.05);
 }
 
+[id^="card"].flip {
+  background-color: rgba(217, 192, 192, 0.481);
+  transform: rotateY(180deg);
+  transition: transform 0.6s;
+}
+
+[id^="card"].flip > .card-content {
+  transform: rotateY(-180deg);
+  transition: transform 0.6s;
+}
+
 [id^="card"].block {
   pointer-events: none;
-  background-color: lightgray;
+  background-color: rgba(144, 238, 144, 0.555);
   opacity: 80%;
 }
