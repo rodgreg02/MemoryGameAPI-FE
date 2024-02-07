@@ -1,9 +1,8 @@
 const cards = document.querySelectorAll(".card");
 
 let firstCurrentCard;
-let checkCard;
-let firstCard;
-let guessed;
+let secondCurrentCard;
+let firstCardClicked = false;
 
 let firstCardValue;
 let secondCardValue;
@@ -13,15 +12,16 @@ for (let i = 0; i < cards.length; i++) {
   card.addEventListener("click", (event) => {
     const iconElement = event.currentTarget.querySelector("i");
 
-    if (!firstCard) {
-      currentCard = i;
-      getCardFirst(currentCard, card, iconElement);
-      firstCard = true;
+    if (!firstCardClicked) {
+      firstCurrentCard = i;
+      getCardFirst(firstCurrentCard, card, iconElement);
+      firstCardClicked = true;
     } else {
-      checkCard = i;
-      getCardSecond(checkCard, card, iconElement);
-      firstCard = false;
+      secondCurrentCard = i;
+      getCardSecond(firstCurrentCard, secondCurrentCard, card, iconElement);
+      firstCardClicked = false;
     }
+
     card.classList.add("clicked");
     setTimeout(() => card.classList.remove("clicked"), 300);
   });
@@ -163,7 +163,7 @@ function getCardFirst(firstCardReveal, card, iconElement) {
     });
 }
 
-function getCardSecond(secondCardReveal, card, iconElement) {
+function getCardSecond(firstCardReveal, secondCardReveal, card, iconElement) {
   const apiUrl = "http://localhost:8080/game/";
   const data = { indexOfCard: secondCardReveal };
 
@@ -180,7 +180,13 @@ function getCardSecond(secondCardReveal, card, iconElement) {
       console.log("Response:", response.data.value);
       secondCardValue = response.data.value;
       flipCard(card, secondCardValue, iconElement);
-      checkIfCardsAreEqualOrNot(firstCardValue, secondCardValue);
+      checkIfCardsAreEqualOrNot(
+        firstCardReveal,
+        secondCardReveal,
+        firstCardValue,
+        secondCardValue,
+        iconElement
+      );
     })
     .catch((error) => {
       if (error.response && error.response.status === 403) {
@@ -191,14 +197,37 @@ function getCardSecond(secondCardReveal, card, iconElement) {
     });
 }
 
-function checkIfCardsAreEqualOrNot(firstCardValue, secondCardValue) {
+function checkIfCardsAreEqualOrNot(
+  firstCardRevealed,
+  secondCardRevealed,
+  firstCardValue,
+  secondCardValue,
+  iconElement
+) {
   console.log("checking..");
   console.log(firstCardValue);
   console.log(secondCardValue);
   if (firstCardValue == secondCardValue) {
+    firstCardValue = null;
+    secondCardValue = null;
+    firstCurrentCard = null;
+    secondCurrentCard = null;
+    guessed = true;
     console.log("nice");
+    blockCard(cards[secondCardRevealed]);
+    blockCard(cards[firstCardRevealed]);
   } else {
-    console.log("nop");
+    firstCardValue = null;
+    secondCardValue = null;
+    firstCurrentCard = null;
+    secondCurrentCard = null;
+    guessed = false;
+    console.log("nop, lol..");
+    firstCard = false;
+    setTimeout(() => {
+      reverseFlipCard(cards[firstCardRevealed], iconElement);
+      reverseFlipCard(cards[secondCardRevealed], iconElement);
+    }, 1000);
   }
 }
 
