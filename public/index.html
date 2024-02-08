@@ -11,12 +11,28 @@
       href="https://fonts.googleapis.com/css2?family=Dokdo&display=swap"
       rel="stylesheet" />
     <link rel="icon" href="data:," />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+      rel="stylesheet" />
   </head>
   <body>
-    <button id="startGame">start</button>
-    <button id="restartGame">restart</button>
+    <div id="gameStartedMessage" class="gameStartedMessage">
+      <h3 id="gameStarted">GAME STARTED</h3>
+    </div>
+    <div id="gameFinishedMessage" class="gameFinishedMessage">
+      <h3>YOU WIN!</h3>
+      <button id="playAgain">PLAY AGAIN</button>
+    </div>
     <div class="container">
-      <h2>Memory Game</h2>
+      <div class="controlButtons">
+        <div id="startGame"><i class="fa-solid fa-play"></i></div>
+        <div id="restartGame">
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </div>
+      </div>
       <div class="cards">
         <div id="card0" class="card">
           <div class="card-content"></div>

@@ -1,9 +1,13 @@
 const cards = document.querySelectorAll(".card");
+const gameFinishedMessage = document.getElementById("gameFinishedMessage");
+const playAgain = document.getElementById("playAgain");
+const startGameBtn = document.getElementById("startGame");
+const restartGameBtn = document.getElementById("restartGame");
 
 let firstCurrentCard;
-let checkCard;
-let firstCard;
-let guessed;
+let secondCurrentCard;
+let firstCardClicked = false;
+let guessed = 0;
 
 let firstCardValue;
 let secondCardValue;
@@ -13,21 +17,22 @@ for (let i = 0; i < cards.length; i++) {
   card.addEventListener("click", (event) => {
     const iconElement = event.currentTarget.querySelector("i");
 
-    if (!firstCard) {
-      currentCard = i;
-      getCardFirst(currentCard, card, iconElement);
-      firstCard = true;
+    if (!firstCardClicked) {
+      firstCurrentCard = i;
+      getCardFirst(firstCurrentCard, card, iconElement);
+      firstCardClicked = true;
     } else {
-      checkCard = i;
-      getCardSecond(checkCard, card, iconElement);
-      firstCard = false;
+      secondCurrentCard = i;
+      getCardSecond(firstCurrentCard, secondCurrentCard, card, iconElement);
+      firstCardClicked = false;
     }
+
     card.classList.add("clicked");
     setTimeout(() => card.classList.remove("clicked"), 300);
   });
 }
 
-document.getElementById("startGame").addEventListener("click", startGame);
+startGameBtn.addEventListener("click", startGame);
 
 function startGame() {
   const apiUrl = "http://localhost:8080/game";
@@ -47,7 +52,7 @@ function startGame() {
       console.log("Response:", response.data);
       console.log("start");
       removeBlockClass();
-
+      guessed = 0;
       return getAllCards();
     })
     .then((cardValuesArray) => {
@@ -63,7 +68,7 @@ function startGame() {
     });
 }
 
-document.getElementById("restartGame").addEventListener("click", restartGame);
+restartGameBtn.addEventListener("click", restartGame);
 
 function restartGame() {
   const apiUrl = "http://localhost:8080/game/restart";
@@ -83,6 +88,7 @@ function restartGame() {
       console.log("Response:", response.data);
       console.log("restart");
       removeBlockClass();
+      guessed = 0;
       return getAllCards();
     })
     .then((cardValuesArray) => {
@@ -163,7 +169,7 @@ function getCardFirst(firstCardReveal, card, iconElement) {
     });
 }
 
-function getCardSecond(secondCardReveal, card, iconElement) {
+function getCardSecond(firstCardReveal, secondCardReveal, card, iconElement) {
   const apiUrl = "http://localhost:8080/game/";
   const data = { indexOfCard: secondCardReveal };
 
@@ -180,7 +186,13 @@ function getCardSecond(secondCardReveal, card, iconElement) {
       console.log("Response:", response.data.value);
       secondCardValue = response.data.value;
       flipCard(card, secondCardValue, iconElement);
-      checkIfCardsAreEqualOrNot(firstCardValue, secondCardValue);
+      checkIfCardsAreEqualOrNot(
+        firstCardReveal,
+        secondCardReveal,
+        firstCardValue,
+        secondCardValue,
+        iconElement
+      );
     })
     .catch((error) => {
       if (error.response && error.response.status === 403) {
@@ -191,14 +203,34 @@ function getCardSecond(secondCardReveal, card, iconElement) {
     });
 }
 
-function checkIfCardsAreEqualOrNot(firstCardValue, secondCardValue) {
+function checkIfCardsAreEqualOrNot(
+  firstCardRevealed,
+  secondCardRevealed,
+  firstCardValue,
+  secondCardValue,
+  iconElement
+) {
   console.log("checking..");
   console.log(firstCardValue);
   console.log(secondCardValue);
   if (firstCardValue == secondCardValue) {
-    console.log("nice");
+    guessed = guessed + 1;
+    console.log("check: nice");
+    blockCard(cards[secondCardRevealed]);
+    blockCard(cards[firstCardRevealed]);
+
+    if (guessed == 10) {
+      setTimeout(() => {
+        gameFinishedMessage.style.display = "flex";
+        console.log("you won");
+      }, 500);
+    }
   } else {
-    console.log("nop");
+    console.log("check: nop, lol..");
+    setTimeout(() => {
+      reverseFlipCard(cards[firstCardRevealed], iconElement);
+      reverseFlipCard(cards[secondCardRevealed], iconElement);
+    }, 1000);
   }
 }
 
@@ -222,3 +254,5 @@ function reverseFlipCard(card, iconElement) {
 function blockCard(card) {
   card.classList.add("block");
 }
+
+playAgain.addEventListener("click", restartGame);

@@ -15,10 +15,6 @@ class GameController(val gameService : GameService) {
     @PostMapping("/restart")
     fun restartGame() : ResponseEntity<Unit> { return ResponseEntity.ok().body(gameService.restartGame())}
 
-    @GetMapping("/{indexOfCard}/{valueOfCurrCard}")
-    fun checkCard(@PathVariable indexOfCard: Int,
-                  @PathVariable valueOfCurrCard: Int) = gameService.getCard(indexOfCard, valueOfCurrCard)
-
     @GetMapping("/{indexOfCard}")
     fun getCard(@PathVariable indexOfCard: Int) = gameService.getCard(indexOfCard)
 
