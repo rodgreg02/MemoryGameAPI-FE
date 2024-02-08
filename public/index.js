@@ -1,8 +1,13 @@
 const cards = document.querySelectorAll(".card");
+const gameFinishedMessage = document.getElementById("gameFinishedMessage");
+const playAgain = document.getElementById("playAgain");
+const startGameBtn = document.getElementById("startGame");
+const restartGameBtn = document.getElementById("restartGame");
 
 let firstCurrentCard;
 let secondCurrentCard;
 let firstCardClicked = false;
+let guessed = 0;
 
 let firstCardValue;
 let secondCardValue;
@@ -27,7 +32,7 @@ for (let i = 0; i < cards.length; i++) {
   });
 }
 
-document.getElementById("startGame").addEventListener("click", startGame);
+startGameBtn.addEventListener("click", startGame);
 
 function startGame() {
   const apiUrl = "http://localhost:8080/game";
@@ -47,7 +52,7 @@ function startGame() {
       console.log("Response:", response.data);
       console.log("start");
       removeBlockClass();
-
+      guessed = 0;
       return getAllCards();
     })
     .then((cardValuesArray) => {
@@ -63,7 +68,7 @@ function startGame() {
     });
 }
 
-document.getElementById("restartGame").addEventListener("click", restartGame);
+restartGameBtn.addEventListener("click", restartGame);
 
 function restartGame() {
   const apiUrl = "http://localhost:8080/game/restart";
@@ -83,6 +88,7 @@ function restartGame() {
       console.log("Response:", response.data);
       console.log("restart");
       removeBlockClass();
+      guessed = 0;
       return getAllCards();
     })
     .then((cardValuesArray) => {
@@ -208,22 +214,19 @@ function checkIfCardsAreEqualOrNot(
   console.log(firstCardValue);
   console.log(secondCardValue);
   if (firstCardValue == secondCardValue) {
-    firstCardValue = null;
-    secondCardValue = null;
-    firstCurrentCard = null;
-    secondCurrentCard = null;
-    guessed = true;
-    console.log("nice");
+    guessed = guessed + 1;
+    console.log("check: nice");
     blockCard(cards[secondCardRevealed]);
     blockCard(cards[firstCardRevealed]);
+
+    if (guessed == 10) {
+      setTimeout(() => {
+        gameFinishedMessage.style.display = "flex";
+        console.log("you won");
+      }, 500);
+    }
   } else {
-    firstCardValue = null;
-    secondCardValue = null;
-    firstCurrentCard = null;
-    secondCurrentCard = null;
-    guessed = false;
-    console.log("nop, lol..");
-    firstCard = false;
+    console.log("check: nop, lol..");
     setTimeout(() => {
       reverseFlipCard(cards[firstCardRevealed], iconElement);
       reverseFlipCard(cards[secondCardRevealed], iconElement);
@@ -251,3 +254,5 @@ function reverseFlipCard(card, iconElement) {
 function blockCard(card) {
   card.classList.add("block");
 }
+
+playAgain.addEventListener("click", restartGame);

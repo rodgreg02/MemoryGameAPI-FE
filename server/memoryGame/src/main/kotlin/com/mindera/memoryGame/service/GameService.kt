@@ -12,35 +12,11 @@ class GameService(val gameRepo: GameRepo) {
         return true
     }
 
-    fun getCard(indexOfCard : Int, valueOfCurrCard: Int) : Boolean{
-        val checkCard = gameRepo.getCard(indexOfCard)
-        val currCard = gameRepo.getCard(valueOfCurrCard)
-        if(!(gameRepo.getCard(indexOfCard)?.flipped)!!) {
-        if (checkCard != null) {
-            if (currCard != null) {
-                return if(checkCard.getCardValue() == currCard.getCardValue()){
-                    gameRepo.getCard(indexOfCard)!!.setCardFlipped()
-                    true
-                }else{
-                    gameRepo.getCard(valueOfCurrCard)!!.setCardFlipped()
-                    false
-                }
-            }
-        }
-        } else{
-            throw AlreadyFlippedException("This card was already flipped!")
-        }
-        return false }
-
     fun getCard(indexOfCard : Int) : CardEntity? {
-        if(!(gameRepo.getCard(indexOfCard)?.flipped)!!) {
             gameRepo.getCard(indexOfCard)!!.setCardFlipped()
 
             return gameRepo.getCard(indexOfCard)
-        }
-        else{
-            throw AlreadyFlippedException("This card was already flipped!")
-        }
+
     }
 
     fun getAllCards() = gameRepo.getAllCards();

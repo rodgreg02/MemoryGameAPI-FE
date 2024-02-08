@@ -12,7 +12,7 @@ class GameRepo {
             val cardEntity = CardEntity.Builder().value(if (i >= 10) i - 10 else i).build()
             gameField.add(cardEntity)
         }
-        gameField.shuffle()
+        //gameField.shuffle()
         println("start:")
         for(i in 0..19){
             println(gameField[i].getCardValue())
@@ -26,7 +26,7 @@ class GameRepo {
         gameField.forEach{
             it.setCardFlippedFalse();
         }
-        gameField.shuffle()
+        //gameField.shuffle()
         println("restart:")
         for(i in 0..19){
             println(gameField[i].getCardValue())
